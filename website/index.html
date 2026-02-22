@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data-Driven Inverse Problem of Non-linear PDEs — COVID-19 Kinetic Parameter Inversion</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="topnav">
+  <span class="nav-brand">🧬 Fisher-KPP COVID-19 Parameter Inversion</span>
+  <div class="nav-links">
+    <a href="#sim">Simulation</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#policy">Policy</a>
+    <a href="#countries">Countries</a>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="header">
+  <h1>Data-Driven Inverse Problem of Non-linear PDEs:<br>Kinetic Parameter Inversion for the Spatial Spread of COVID-19</h1>
+  <p>Fisher-KPP Reaction-Diffusion Equation · CUDA-Accelerated 2D PDE Solver · Random Forest Feature Engineering</p>
+  <p style="margin-top:6px;font-size:0.85rem;color:#58a6ff;">Data4Good 2026 · UCSB Datathon · Public Health & Wellbeing</p>
+</div>
+
+<!-- ═══════════ Section 1: Interactive Simulation ═══════════ -->
+<section id="sim" class="section-anchor"></section>
+<div class="main-grid">
+  <!-- LEFT: Parameter Controls -->
+  <div class="card sidebar">
+    <h2>⚙️ Model Parameters</h2>
+
+    <div class="control-group">
+      <label>🦠 Virus Preset</label>
+      <select id="preset">
+        <option value="covid-original">COVID-19 Wild Type (R₀≈3.0)</option>
+        <option value="delta">COVID-19 Delta (R₀≈6.1)</option>
+        <option value="omicron">COVID-19 Omicron (R₀≈6.7)</option>
+        <option value="ebola">Ebola (R₀≈2.0)</option>
+        <option value="h1n1">Seasonal Flu H1N1 (R₀≈1.4)</option>
+        <option value="measles">Measles (R₀≈14.4)</option>
+        <option value="sars">SARS (R₀≈3.0)</option>
+        <option value="custom">Custom Parameters</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>🌍 Country Preset</label>
+      <select id="country-preset">
+        <option value="">— Select country to auto-fill D, K —</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Growth Rate r (day⁻¹) <span class="value" id="param-r-val">0.20</span></label>
+      <input type="range" id="param-r" min="0.01" max="2.0" step="0.01" value="0.20">
+    </div>
+    <div class="control-group">
+      <label>Recovery Rate γ (day⁻¹) <span class="value" id="param-gamma-val">0.070</span></label>
+      <input type="range" id="param-gamma" min="0.001" max="0.5" step="0.001" value="0.07">
+    </div>
+    <div class="control-group">
+      <label>Carrying Capacity K <span class="value" id="param-K-val">1.00</span></label>
+      <input type="range" id="param-K" min="0.01" max="1.0" step="0.01" value="1.00">
+    </div>
+    <div class="control-group">
+      <label>Diffusion Coefficient D (km²/day) <span class="value" id="param-D-val">0.80</span></label>
+      <input type="range" id="param-D" min="0.01" max="5" step="0.01" value="0.8">
+    </div>
+
+    <button class="btn btn-primary" id="run-btn">▶ Run Simulation</button>
+
+    <div style="margin-top:16px">
+      <h2>📐 Core Equation</h2>
+      <div class="equation" id="eq-fisher"></div>
+      <div class="equation" id="eq-wave"></div>
+      <div class="equation" id="eq-r0"></div>
+      <div class="equation" id="eq-equil"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: Visualizations -->
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="card">
+      <h2>📈 Active Infection u(t) — Fisher-KPP with Recovery</h2>
+      <div class="legend">
+        <span><span class="dot" style="background:#f85149"></span> Active Infection u(t)</span>
+        <span><span class="dot" style="background:#d29922"></span> Growth r·u·(1−u/K)</span>
+        <span><span class="dot" style="background:#3fb950"></span> Recovery γ·u</span>
+      </div>
+      <canvas id="seird-canvas"></canvas>
+      <div class="sim-info">
+        <span class="day" id="day-counter">Day 0</span>
+        <span id="peak-info">Peak Infection: —</span>
+        <span id="r0-display">R₀ = r/γ = —</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline btn-sm" id="play-btn">▶ Play</button>
+        <button class="btn btn-outline btn-sm" id="pause-btn">⏸ Pause</button>
+        <button class="btn btn-outline btn-sm" id="reset-btn">↺ Reset</button>
+        <div style="flex:2; display:flex; align-items:center; gap:6px;">
+          <span style="font-size:0.8rem; color:#8b949e;">Speed</span>
+          <input type="range" id="speed" min="1" max="20" value="5" style="flex:1">
+          <span style="font-size:0.8rem; color:#58a6ff;" id="speed-val">5x</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+        <span style="font-size:0.8rem; color:#8b949e; min-width:30px;">Day</span>
+        <input type="range" id="day-slider" min="0" max="365" value="0" style="flex:1">
+        <span style="font-size:0.8rem; color:#58a6ff; min-width:40px;" id="day-slider-val">0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🌊 Fisher-KPP 1D Traveling Wave</h2>
+      <canvas id="fisher-canvas"></canvas>
+      <div class="sim-info">
+        <span id="wave-speed-info" style="color:#58a6ff;">Wave Speed c = 2√((r−γ)D) = — km/day</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Policy Panel -->
+  <div class="card sidebar policy-panel">
+    <h2>🛡️ NPI Control Strategies</h2>
+    <div class="r-eff-display">
+      <div class="label">Effective R₀ (= r<sub>eff</sub> / γ)</div>
+      <div class="number" id="r-eff-number">—</div>
+      <div class="label" id="policy-cost">Policy Cost Index: —</div>
+    </div>
+
+    <div class="control-group">
+      <label>😷 Mask Policy <span class="value" id="policy-mask-val">0%</span></label>
+      <input type="range" class="policy-slider" id="policy-mask" min="0" max="100" value="0">
+      <div style="font-size:0.72rem;color:#8b949e;">Extremely low cost | Reduces r</div>
+    </div>
+    <div class="control-group">
+      <label>↔️ Social Distancing <span class="value" id="policy-social-val">0%</span></label>
+      <input type="range" class="policy-slider" id="policy-social" min="0" max="100" value="0">
+    </div>
+    <div class="control-group">
+      <label>🔒 Lockdown <span class="value" id="policy-travel-val">0%</span></label>
+      <input type="range" class="policy-slider" id="policy-travel" min="0" max="100" value="0">
+      <div style="font-size:0.72rem;color:#f85149;">GDP -5.4% | Reduces D | Decays to zero after 112 days</div>
+    </div>
+    <div class="control-group">
+      <label>💉 Vaccination <span class="value" id="policy-vax-val">0%</span></label>
+      <input type="range" class="policy-slider" id="policy-vax" min="0" max="100" value="0">
+    </div>
+    <div class="control-group">
+      <label>💰 Budget Allocation <span class="value" id="budget-val">50%</span></label>
+      <input type="range" id="budget" min="0" max="100" value="50">
+    </div>
+
+    <h2>📊 Scenario Comparison</h2>
+    <div class="btn-row" style="flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm scenario-btn" data-scenario="No Intervention">No Intervention</button>
+      <button class="btn btn-outline btn-sm scenario-btn" data-scenario="Masks Only">Masks Only</button>
+      <button class="btn btn-outline btn-sm scenario-btn" data-scenario="Masks + Social Distancing">Masks + Distancing</button>
+      <button class="btn btn-outline btn-sm scenario-btn" data-scenario="Full Intervention">Full Intervention</button>
+    </div>
+    <table class="scenario-table" style="margin-top:12px">
+      <thead><tr><th>Scenario</th><th>R₀<sub>eff</sub></th><th>Peak u</th><th>Eq. u*</th><th>Cost</th></tr></thead>
+      <tbody id="scenario-tbody">
+        <tr><td colspan="5" style="text-align:center; color:#8b949e;">Run simulation to see results</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ Section 2: Data Pipeline ═══════════ -->
+<section id="pipeline" class="section-anchor"></section>
+<div class="full-section">
+  <div class="card" style="max-width:1200px; margin:0 auto;">
+    <h2>🔬 Inverse Problem Pipeline: Real-World Features → PDE Parameters</h2>
+    <p style="color:#8b949e;font-size:0.85rem;margin-bottom:16px;">
+      We solve the <strong>inverse problem</strong> of the Fisher-KPP PDE: given observed infection curves for 240 region-quarter combinations (30 regions × 8 quarters), we invert for the kinetic parameters D, r, γ using a CUDA-accelerated 2D PDE solver. Then, Random Forest regressors map socioeconomic features to these parameters, enabling prediction for unseen regions.
+    </p>
+
+    <!-- Pipeline Diagram -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:24px;">
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:12px 16px; text-align:center;">
+        <div style="font-size:1.6rem;">📊</div>
+        <div style="color:#58a6ff; font-weight:600;">240 Infection Curves</div>
+        <div style="color:#8b949e; font-size:0.72rem;">30 Regions × 8 Quarters<br>12 sub-periods each</div>
+      </div>
+      <div style="color:#8b949e; font-size:1.5rem;">→</div>
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:12px 16px; text-align:center;">
+        <div style="font-size:1.6rem;">⚡</div>
+        <div style="color:#f85149; font-weight:600;">2D PDE Solver</div>
+        <div style="color:#8b949e; font-size:0.72rem;">CUDA / CPU<br>Circular domain, N=201</div>
+      </div>
+      <div style="color:#8b949e; font-size:1.5rem;">→</div>
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:12px 16px; text-align:center;">
+        <div style="font-size:1.6rem;">🎯</div>
+        <div style="color:#d29922; font-weight:600;">D, r, γ per Region</div>
+        <div style="color:#8b949e; font-size:0.72rem;">least_squares (TRF)<br>+ Adam (batch GPU)</div>
+      </div>
+      <div style="color:#8b949e; font-size:1.5rem;">→</div>
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:12px 16px; text-align:center;">
+        <div style="font-size:1.6rem;">📐</div>
+        <div style="color:#3fb950; font-weight:600;">~15 Features</div>
+        <div style="color:#8b949e; font-size:0.72rem;">Socioeconomic + Engineered<br>Interactions</div>
+      </div>
+      <div style="color:#8b949e; font-size:1.5rem;">→</div>
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:12px 16px; text-align:center;">
+        <div style="font-size:1.6rem;">🤖</div>
+        <div style="color:#bc8cff; font-weight:600;">Stacking Ensemble ×3</div>
+        <div style="color:#8b949e; font-size:0.72rem;">XGBoost + ExtraTrees → Ridge<br>for D, r, γ separately</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- PDE Solver Details -->
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:16px;">
+        <h3 style="color:#f85149; margin-top:0;">⚡ PDE Solver (Forward Problem)</h3>
+        <div class="equation" id="eq-pipeline-model"></div>
+        <ul style="color:#c9d1d9; font-size:0.85rem; line-height:1.8;">
+          <li><strong>Domain:</strong> Circular, R = √(Area/π) per region</li>
+          <li><strong>Grid:</strong> N×N finite difference (51 CPU / 201 CUDA)</li>
+          <li><strong>IC:</strong> Gaussian calibrated to first data point</li>
+          <li><strong>BC:</strong> Border openness → Neumann derivative</li>
+          <li><strong>CFL:</strong> dt = 0.9·dx²/(4D) adaptive stability</li>
+          <li><strong>CPU:</strong> scipy.optimize.least_squares (TRF)</li>
+          <li><strong>GPU:</strong> PyTorch batch 240 regions, Adam lr=0.05</li>
+        </ul>
+      </div>
+
+      <!-- ML Model Details -->
+      <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:16px;">
+        <h3 style="color:#3fb950; margin-top:0;">🤖 Stacking Ensemble (per parameter)</h3>
+        <ul style="color:#c9d1d9; font-size:0.85rem; line-height:1.8;">
+          <li><strong>Base learners:</strong> XGBoost (1000 trees, depth=8, lr=0.03) + ExtraTrees (1000 trees, depth=15)</li>
+          <li><strong>Meta-learner:</strong> RidgeCV (stacking)</li>
+          <li><strong>Validation:</strong> 5-fold CV, out-of-fold R²</li>
+          <li><strong>Lag-1 feature:</strong> Previous quarter's parameter value (temporal continuity)</li>
+          <li><strong>Region baseline:</strong> Per-region mean as anchor</li>
+        </ul>
+        <h4 style="color:#d29922; margin-top:12px; margin-bottom:4px;">Engineered Features per Target:</h4>
+        <table class="scenario-table" style="font-size:0.82rem;">
+          <thead><tr><th>Target</th><th>Key Feature</th><th>Transform</th></tr></thead>
+          <tbody>
+            <tr><td style="color:#58a6ff;">D (diffusion)</td><td>mobility_density</td><td>mobility × density (log-space)</td></tr>
+            <tr><td style="color:#3fb950;">r (growth)</td><td>growth_climatic</td><td>density × exp(-10(T−0.45)²)</td></tr>
+            <tr><td style="color:#f85149;">γ (clearance)</td><td>healthcare_strength</td><td>hospital_beds × testing_rate</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="color:#58a6ff; margin-top:12px;">Feature Importance — Parameter D</h4>
+        <img src="img/rf_importance_D.png" alt="Feature Importance for D" style="width:100%; border-radius:8px; border:1px solid #30363d; margin-top:4px;">
+      </div>
+    </div>
+
+    <!-- PDE Fitting Results -->
+    <h3 style="color:#d29922; margin-top:24px;">📈 PDE Fitting Results — Representative Regions</h3>
+    <p style="color:#8b949e; font-size:0.85rem; margin-bottom:12px;">
+      Red dots: observed infection rates (12 sub-periods per quarter). Blue line: Fisher-KPP PDE fitted curve.
+    </p>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px; margin-top:12px;">
+      <div style="text-align:center;">
+        <img src="img/fit_col4.png" alt="Col 4 fit" style="width:100%; border-radius:8px; border:1px solid #30363d;">
+        <p style="color:#8b949e; font-size:0.8rem;">Col 4 | R₀ = 3.29</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="img/fit_col13.png" alt="Col 13 fit" style="width:100%; border-radius:8px; border:1px solid #30363d;">
+        <p style="color:#8b949e; font-size:0.8rem;">Col 13 | R₀ = 3.17</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="img/fit_col80.png" alt="Col 80 fit" style="width:100%; border-radius:8px; border:1px solid #30363d;">
+        <p style="color:#8b949e; font-size:0.8rem;">Col 80 | R₀ = 3.52</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="img/fit_col185.png" alt="Col 185 fit" style="width:100%; border-radius:8px; border:1px solid #30363d;">
+        <p style="color:#8b949e; font-size:0.8rem;">Col 185 | R₀ = 3.36</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="img/fit_col208.png" alt="Col 208 fit" style="width:100%; border-radius:8px; border:1px solid #30363d;">
+        <p style="color:#8b949e; font-size:0.8rem;">Col 208 | R₀ = 3.00</p>
+      </div>
+    </div>
+
+    <div class="callout green" style="margin-top:16px;">
+      ✅ <strong>Key Insight:</strong> By solving the inverse problem, we extract physically meaningful parameters from observed data. The Random Forest then reveals which socioeconomic factors drive each PDE parameter — enabling predictive modeling for pandemic preparedness in new regions.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Section 3: Policy Analysis ═══════════ -->
+<section id="policy" class="section-anchor"></section>
+<div class="full-section">
+  <div class="card" style="max-width:1000px; margin:0 auto;">
+    <h2>💰 Policy Impact on PDE Parameters</h2>
+    <p style="color:#8b949e;font-size:0.85rem;margin-bottom:12px;">
+      Each intervention maps directly to changes in the PDE parameters (D, r, γ, K), providing quantitative predictions of epidemic trajectory under different policies.
+    </p>
+    <table class="scenario-table" style="margin-top:16px;">
+      <thead><tr><th>Policy</th><th>PDE Effect</th><th>Benefit</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td>🔒 Lockdown</td><td>Reduces D (diffusion)</td><td>Mobility −50%</td><td style="color:#f85149">GDP −5.4%</td></tr>
+        <tr><td>😷 Masks</td><td>Suppresses r (growth)</td><td>R₀ → below 1</td><td style="color:#3fb950">≈ 0</td></tr>
+        <tr><td>🔬 Testing</td><td>Adjusts r and K</td><td>Precision targeting</td><td style="color:#d29922">Moderate</td></tr>
+        <tr><td>💉 Vaccine</td><td>Reduces r and K</td><td>Herd immunity</td><td style="color:#d29922">Infrastructure</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ Section 4: Country Data ═══════════ -->
+<section id="countries" class="section-anchor"></section>
+<div class="full-section">
+  <div class="card" style="max-width:1200px; margin:0 auto;">
+    <h2>🌍 Country Parameter Database</h2>
+    <p style="color:#8b949e;font-size:0.85rem;margin-bottom:12px;">
+      World Bank + GHS Index data calibrate D and K per country. Wave speed c = 2√((r−γ)D).
+    </p>
+    <div style="overflow-x:auto;">
+      <table class="scenario-table" id="country-table">
+        <thead><tr>
+          <th>Country</th><th>Population</th><th>Density (/km²)</th><th>Beds/1000</th>
+          <th>GDP/Capita ($)</th><th>GHS Index</th><th>r</th><th>D (km²/day)</th><th>Wave Speed c</th><th>R²</th>
+        </tr></thead>
+        <tbody id="country-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>Data-Driven Inverse Problem of Non-linear PDEs: Kinetic Parameter Inversion for COVID-19</p>
+  <p>Data4Good 2026 · UCSB Datathon · Fisher-KPP PDE + CUDA Solver + Random Forest</p>
+  <p style="margin-top:4px;font-size:0.75rem;">Data: KFF COVID · OWID · World Bank · GHS Index | Solvers: 2D FD-PDE (CPU+CUDA) · PyTorch Batch · Scipy least_squares</p>
+</div>
+
+<!-- Scripts -->
+<script src="js/countries.js"></script>
+<script src="js/seird.js"></script>
+<script src="js/fisher-kpp.js"></script>
+<script src="js/optimizer.js"></script>
+<script src="js/animation.js"></script>
+<script src="js/cost-benefit.js"></script>
+<script src="js/main.js"></script>
+<script src="js/init-sections.js"></script>
+</body>
+</html>

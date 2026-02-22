@@ -1,0 +1,31 @@
+Region_Number,Region_Name,Actual_Data_Name,Country,Data_Level,Population
+1,California,California,California,province/state,39538223
+2,New York,New York,New York,province/state,20201249
+3,Texas,Texas,Texas,province/state,29145505
+4,Florida,Florida,Florida,province/state,21538187
+5,Ontario,Ontario,Canada,province/state,14223942
+6,Quebec,Quebec,Canada,province/state,8574571
+7,Lombardy,Italy (country),Italy,country,60317116
+8,Ile-de-France,France (country),France,country,67390000
+9,Bavaria,Germany (country),Germany,country,83240525
+10,Madrid,Spain (country),Spain,country,47351567
+11,Greater London,United Kingdom (country),United Kingdom,country,67886011
+12,Stockholm,Sweden (country),Sweden,country,10380000
+13,Tokyo,Japan (country),Japan,country,125800000
+14,Maharashtra,India (country),India,country,112374333
+15,Kerala,India (country),India,country,34838000
+16,Gyeonggi-do,"Korea, South (country)","Korea, South",country,51780579
+17,Hubei,Hubei,China,province/state,57752557
+18,Guangdong,Guangdong,China,province/state,126012510
+19,Tehran,Iran (country),Iran,country,83992949
+20,Sao Paulo,Brazil (country),Brazil,country,212559417
+21,Rio de Janeiro,Brazil (country),Brazil,country,212559417
+22,Buenos Aires,Argentina (country),Argentina,country,45195774
+23,Santiago Met.,Chile (country),Chile,country,19116201
+24,New South Wales,New South Wales,Australia,province/state,8166369
+25,Victoria,Victoria,Australia,province/state,6681386
+26,Gauteng,South Africa (country),South Africa,country,59308690
+27,Western Cape,South Africa (country),South Africa,country,59308690
+28,Dubai,United Arab Emirates (country),United Arab Emirates,country,9890402
+29,Istanbul,Turkey (country),Turkey,country,84339067
+30,Riyadh,Saudi Arabia (country),Saudi Arabia,country,34813871

@@ -1,0 +1,241 @@
+Column,Region_Name,Region_Number,Quarter
+1,California_Q1,1,1
+2,California_Q2,1,2
+3,California_Q3,1,3
+4,California_Q4,1,4
+5,California_Q5,1,5
+6,California_Q6,1,6
+7,California_Q7,1,7
+8,California_Q8,1,8
+9,New York_Q1,2,1
+10,New York_Q2,2,2
+11,New York_Q3,2,3
+12,New York_Q4,2,4
+13,New York_Q5,2,5
+14,New York_Q6,2,6
+15,New York_Q7,2,7
+16,New York_Q8,2,8
+17,Texas_Q1,3,1
+18,Texas_Q2,3,2
+19,Texas_Q3,3,3
+20,Texas_Q4,3,4
+21,Texas_Q5,3,5
+22,Texas_Q6,3,6
+23,Texas_Q7,3,7
+24,Texas_Q8,3,8
+25,Florida_Q1,4,1
+26,Florida_Q2,4,2
+27,Florida_Q3,4,3
+28,Florida_Q4,4,4
+29,Florida_Q5,4,5
+30,Florida_Q6,4,6
+31,Florida_Q7,4,7
+32,Florida_Q8,4,8
+33,Ontario_Q1,5,1
+34,Ontario_Q2,5,2
+35,Ontario_Q3,5,3
+36,Ontario_Q4,5,4
+37,Ontario_Q5,5,5
+38,Ontario_Q6,5,6
+39,Ontario_Q7,5,7
+40,Ontario_Q8,5,8
+41,Quebec_Q1,6,1
+42,Quebec_Q2,6,2
+43,Quebec_Q3,6,3
+44,Quebec_Q4,6,4
+45,Quebec_Q5,6,5
+46,Quebec_Q6,6,6
+47,Quebec_Q7,6,7
+48,Quebec_Q8,6,8
+49,Lombardy_Q1,7,1
+50,Lombardy_Q2,7,2
+51,Lombardy_Q3,7,3
+52,Lombardy_Q4,7,4
+53,Lombardy_Q5,7,5
+54,Lombardy_Q6,7,6
+55,Lombardy_Q7,7,7
+56,Lombardy_Q8,7,8
+57,Ile-de-France_Q1,8,1
+58,Ile-de-France_Q2,8,2
+59,Ile-de-France_Q3,8,3
+60,Ile-de-France_Q4,8,4
+61,Ile-de-France_Q5,8,5
+62,Ile-de-France_Q6,8,6
+63,Ile-de-France_Q7,8,7
+64,Ile-de-France_Q8,8,8
+65,Bavaria_Q1,9,1
+66,Bavaria_Q2,9,2
+67,Bavaria_Q3,9,3
+68,Bavaria_Q4,9,4
+69,Bavaria_Q5,9,5
+70,Bavaria_Q6,9,6
+71,Bavaria_Q7,9,7
+72,Bavaria_Q8,9,8
+73,Madrid_Q1,10,1
+74,Madrid_Q2,10,2
+75,Madrid_Q3,10,3
+76,Madrid_Q4,10,4
+77,Madrid_Q5,10,5
+78,Madrid_Q6,10,6
+79,Madrid_Q7,10,7
+80,Madrid_Q8,10,8
+81,Greater London_Q1,11,1
+82,Greater London_Q2,11,2
+83,Greater London_Q3,11,3
+84,Greater London_Q4,11,4
+85,Greater London_Q5,11,5
+86,Greater London_Q6,11,6
+87,Greater London_Q7,11,7
+88,Greater London_Q8,11,8
+89,Stockholm_Q1,12,1
+90,Stockholm_Q2,12,2
+91,Stockholm_Q3,12,3
+92,Stockholm_Q4,12,4
+93,Stockholm_Q5,12,5
+94,Stockholm_Q6,12,6
+95,Stockholm_Q7,12,7
+96,Stockholm_Q8,12,8
+97,Tokyo_Q1,13,1
+98,Tokyo_Q2,13,2
+99,Tokyo_Q3,13,3
+100,Tokyo_Q4,13,4
+101,Tokyo_Q5,13,5
+102,Tokyo_Q6,13,6
+103,Tokyo_Q7,13,7
+104,Tokyo_Q8,13,8
+105,Maharashtra_Q1,14,1
+106,Maharashtra_Q2,14,2
+107,Maharashtra_Q3,14,3
+108,Maharashtra_Q4,14,4
+109,Maharashtra_Q5,14,5
+110,Maharashtra_Q6,14,6
+111,Maharashtra_Q7,14,7
+112,Maharashtra_Q8,14,8
+113,Kerala_Q1,15,1
+114,Kerala_Q2,15,2
+115,Kerala_Q3,15,3
+116,Kerala_Q4,15,4
+117,Kerala_Q5,15,5
+118,Kerala_Q6,15,6
+119,Kerala_Q7,15,7
+120,Kerala_Q8,15,8
+121,Gyeonggi-do_Q1,16,1
+122,Gyeonggi-do_Q2,16,2
+123,Gyeonggi-do_Q3,16,3
+124,Gyeonggi-do_Q4,16,4
+125,Gyeonggi-do_Q5,16,5
+126,Gyeonggi-do_Q6,16,6
+127,Gyeonggi-do_Q7,16,7
+128,Gyeonggi-do_Q8,16,8
+129,Hubei_Q1,17,1
+130,Hubei_Q2,17,2
+131,Hubei_Q3,17,3
+132,Hubei_Q4,17,4
+133,Hubei_Q5,17,5
+134,Hubei_Q6,17,6
+135,Hubei_Q7,17,7
+136,Hubei_Q8,17,8
+137,Guangdong_Q1,18,1
+138,Guangdong_Q2,18,2
+139,Guangdong_Q3,18,3
+140,Guangdong_Q4,18,4
+141,Guangdong_Q5,18,5
+142,Guangdong_Q6,18,6
+143,Guangdong_Q7,18,7
+144,Guangdong_Q8,18,8
+145,Tehran_Q1,19,1
+146,Tehran_Q2,19,2
+147,Tehran_Q3,19,3
+148,Tehran_Q4,19,4
+149,Tehran_Q5,19,5
+150,Tehran_Q6,19,6
+151,Tehran_Q7,19,7
+152,Tehran_Q8,19,8
+153,Sao Paulo_Q1,20,1
+154,Sao Paulo_Q2,20,2
+155,Sao Paulo_Q3,20,3
+156,Sao Paulo_Q4,20,4
+157,Sao Paulo_Q5,20,5
+158,Sao Paulo_Q6,20,6
+159,Sao Paulo_Q7,20,7
+160,Sao Paulo_Q8,20,8
+161,Rio de Janeiro_Q1,21,1
+162,Rio de Janeiro_Q2,21,2
+163,Rio de Janeiro_Q3,21,3
+164,Rio de Janeiro_Q4,21,4
+165,Rio de Janeiro_Q5,21,5
+166,Rio de Janeiro_Q6,21,6
+167,Rio de Janeiro_Q7,21,7
+168,Rio de Janeiro_Q8,21,8
+169,Buenos Aires_Q1,22,1
+170,Buenos Aires_Q2,22,2
+171,Buenos Aires_Q3,22,3
+172,Buenos Aires_Q4,22,4
+173,Buenos Aires_Q5,22,5
+174,Buenos Aires_Q6,22,6
+175,Buenos Aires_Q7,22,7
+176,Buenos Aires_Q8,22,8
+177,Santiago Met._Q1,23,1
+178,Santiago Met._Q2,23,2
+179,Santiago Met._Q3,23,3
+180,Santiago Met._Q4,23,4
+181,Santiago Met._Q5,23,5
+182,Santiago Met._Q6,23,6
+183,Santiago Met._Q7,23,7
+184,Santiago Met._Q8,23,8
+185,New South Wales_Q1,24,1
+186,New South Wales_Q2,24,2
+187,New South Wales_Q3,24,3
+188,New South Wales_Q4,24,4
+189,New South Wales_Q5,24,5
+190,New South Wales_Q6,24,6
+191,New South Wales_Q7,24,7
+192,New South Wales_Q8,24,8
+193,Victoria_Q1,25,1
+194,Victoria_Q2,25,2
+195,Victoria_Q3,25,3
+196,Victoria_Q4,25,4
+197,Victoria_Q5,25,5
+198,Victoria_Q6,25,6
+199,Victoria_Q7,25,7
+200,Victoria_Q8,25,8
+201,Gauteng_Q1,26,1
+202,Gauteng_Q2,26,2
+203,Gauteng_Q3,26,3
+204,Gauteng_Q4,26,4
+205,Gauteng_Q5,26,5
+206,Gauteng_Q6,26,6
+207,Gauteng_Q7,26,7
+208,Gauteng_Q8,26,8
+209,Western Cape_Q1,27,1
+210,Western Cape_Q2,27,2
+211,Western Cape_Q3,27,3
+212,Western Cape_Q4,27,4
+213,Western Cape_Q5,27,5
+214,Western Cape_Q6,27,6
+215,Western Cape_Q7,27,7
+216,Western Cape_Q8,27,8
+217,Dubai_Q1,28,1
+218,Dubai_Q2,28,2
+219,Dubai_Q3,28,3
+220,Dubai_Q4,28,4
+221,Dubai_Q5,28,5
+222,Dubai_Q6,28,6
+223,Dubai_Q7,28,7
+224,Dubai_Q8,28,8
+225,Istanbul_Q1,29,1
+226,Istanbul_Q2,29,2
+227,Istanbul_Q3,29,3
+228,Istanbul_Q4,29,4
+229,Istanbul_Q5,29,5
+230,Istanbul_Q6,29,6
+231,Istanbul_Q7,29,7
+232,Istanbul_Q8,29,8
+233,Riyadh_Q1,30,1
+234,Riyadh_Q2,30,2
+235,Riyadh_Q3,30,3
+236,Riyadh_Q4,30,4
+237,Riyadh_Q5,30,5
+238,Riyadh_Q6,30,6
+239,Riyadh_Q7,30,7
+240,Riyadh_Q8,30,8
